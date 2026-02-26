@@ -5,8 +5,9 @@ echo Build complet : Executable + Installateur
 echo ========================================
 echo.
 
-echo [1/4] Installation du package urmacropkg (source locale)...
-pip install -e "D:\=Dev\_Packages\urmacropkg" --quiet
+echo [1/4] Installation du package urmacropkg (PyPI)...
+pip uninstall urmacropkg -y --quiet 2>nul
+pip install urmacropkg --quiet
 if errorlevel 1 (
     echo ERREUR : impossible d'installer urmacropkg
     pause
@@ -33,6 +34,17 @@ if errorlevel 1 (
 
 if not exist "dist\macros" mkdir "dist\macros"
 if not exist "dist\kits.json" echo [] > "dist\kits.json"
+
+rem --- Signature du code (optionnel) ---
+rem Decommentez ces lignes une fois que vous avez un certificat .pfx
+rem set CERT=tools\certificate.pfx
+rem set CERT_PASS=votre_mot_de_passe
+rem set SIGNTOOL="C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\signtool.exe"
+rem if exist %CERT% (
+rem     echo Signature de l'executable...
+rem     %SIGNTOOL% sign /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 /f %CERT% /p %CERT_PASS% dist\UrMacro.exe
+rem )
+rem --- Fin signature ---
 echo.
 
 echo [4/4] Generation de l'installateur...

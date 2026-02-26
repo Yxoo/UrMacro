@@ -140,3 +140,34 @@ git diff
 git restore src/core/kit_runner.py
 git revert <hash>
 ```
+Le repo est déjà connecté. Il y a 4 fichiers à committer (les changements de l'auto-updater), puis build + release. Voici exactement ce que tu dois faire, dans l'ordre :
+
+1. Committer les changements
+
+`cd "d:\=Dev\_Macros\custom_macros"`
+
+`git add main.py requirements.txt tools/urmacro.spec src/core/updater.py`
+`git commit -m "feat: auto-updater via GitHub Releases"`
+`git push`
+
+2. Builder l'exe + installateur
+Lance :
+
+`tools\build_installer.bat`
+Ça produit :
+
+`dist\UrMacro.exe`
+`installer_output\UrMacro_Setup.exe`
+
+3. Créer le Release GitHub v1.0.0
+
+Aller sur https://github.com/Yxoo/UrMacro/releases/new
+
+Tag : `v1.0.0`
+Title : `v1.0.0 — Initial release`
+Assets : glisser les deux fichiers :
+`dist\UrMacro.exe`
+`installer_output\UrMacro_Setup.exe`
+Publier
+
+Pour les prochaines versions, le seul truc à ne pas oublier : incrémenter VERSION dans src/core/updater.py et MyAppVersion dans tools/installer.iss avant de builder et de tagger.
