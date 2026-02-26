@@ -1,0 +1,6 @@
+urmacropkg
+pynput
+pydirectinput
+pyinstaller
+requests
+winocr
