@@ -2,7 +2,7 @@
 
 A modular macro system for Windows with a **kit** system — combine multiple macros with custom keybindings, run them simultaneously, and save your configurations.
 
-Built on top of a custom input API using `SendInput` / `win32` for real input events (compatible with games using DirectInput/raw input).
+Built on top of [urmacropkg](https://github.com/Yxoo/urmacropkg), a standalone Windows input API using `SendInput` / `win32` for real input events (compatible with games using DirectInput/raw input).
 
 ---
 
@@ -47,44 +47,27 @@ Press the assigned key to toggle each macro on/off independently.
 | Key | Action |
 |-----|--------|
 | Assigned keys (j, k...) | Toggle the corresponding macro on/off |
+| `/` | Reload macros from disk (apply code changes without restarting) |
 | `~` | Open kit editor without stopping |
-| `Esc` | Return to main menu |
+| `Esc` | Stop active macros / Return to main menu |
 
 ---
 
 ## Writing a Macro
 
-Create a `.py` file in the `macros/` folder:
+Create a `.py` file in the `macros/` folder. The full input API is automatically available — no import needed at runtime:
 
 ```python
-from macro_api import *
+from urmacro import *  # optional: for IDE autocomplete only
 
 def executer_macro(get_active_status):
     while get_active_status():
-
         press('space')
         if not sleep_interruptible(1.0, get_active_status):
             return
-
 ```
 
-The `macro_api` module is available next to the exe and provides:
-
-| Function | Description |
-|----------|-------------|
-| `press(key)` | Press a key (`'a'`, `'f1'`, `'enter'`, `'space'`...) |
-| `press(key, hold=True)` / `release(key)` | Hold / release a key |
-| `left_click()` / `right_click()` | Mouse clicks |
-| `smooth_move(x, y, duration)` | Smooth mouse movement (Bezier curve) |
-| `send_input_delta(dx, dy)` | Raw relative mouse movement (for game cameras) |
-| `focus_window(title)` | Bring a window to foreground |
-| `get_pixel_color(x, y)` | Read pixel color |
-| `check_pixel_color(x, y, r, g, b, tolerance)` | Pixel color check with tolerance |
-| `find_color(x, y, w, h, r, g, b)` | Search for a color in a region |
-| `sleep_interruptible(seconds, get_active_status)` | Interruptible sleep — returns `False` if macro is stopped |
-| `release_all()` | Release all held keys and clicks |
-
-See [docs/INPUT_API_GUIDE.md](docs/INPUT_API_GUIDE.md) for the full API reference.
+The input API is provided by **[urmacropkg](https://github.com/Yxoo/urmacropkg)** — see that repository for the full API reference (keyboard, mouse, pixel, window, OCR).
 
 ---
 
@@ -93,8 +76,10 @@ See [docs/INPUT_API_GUIDE.md](docs/INPUT_API_GUIDE.md) for the full API referenc
 **Requirements:** Python 3.10+, [Inno Setup 6](https://jrsoftware.org/isdl.php) (for the installer)
 
 ```bash
-git clone https://github.com/<user>/urmacro.git
-cd urmacro
+git clone https://github.com/<user>/UrMacro.git
+cd UrMacro
+
+pip install -e "path/to/urmacropkg"
 pip install -r requirements.txt
 
 # Run from source
@@ -113,25 +98,20 @@ tools\build_installer.bat
 
 ```
 UrMacro/
-├── main.py              # Entry point
-├── macro_api.pyi        # Type stubs (IDE autocomplete)
+├── main.py
 ├── requirements.txt
-├── src/                 # Core engine
-│   ├── input_api.py     # Mouse, keyboard, window API
-│   ├── macro_api.py     # Public macro API
-│   ├── utils.py         # sleep_interruptible
-│   ├── kit.py           # Kit data model
-│   ├── kit_runner.py    # Kit execution engine
-│   ├── kit_manager.py   # Save / load kits
-│   └── menu.py          # Interactive menus
-├── macros/              # Example macros
+├── src/
+│   ├── core/            # Kit, KitRunner, MacroInstance, kit_manager
+│   ├── ui/              # Interactive menus, cursor utility
+│   └── utils.py
+├── macros_examples/     # Example macros
 ├── tools/               # Build scripts & config
 │   ├── build.bat
 │   ├── build_installer.bat
 │   ├── urmacro.spec
 │   ├── installer.iss
 │   └── icon.ico
-└── docs/                # Documentation
+└── docs/
 ```
 
 ---
