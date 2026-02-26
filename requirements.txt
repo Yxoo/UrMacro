@@ -3,4 +3,5 @@ pynput
 pydirectinput
 pyinstaller
 requests
+certifi
 winocr

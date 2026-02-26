@@ -9,6 +9,7 @@ import os
 
 from src.ui import menu_principal
 from src.utils import get_macros_dir
+from src.core.updater import prompt_update
 
 
 def main():
@@ -24,6 +25,9 @@ def main():
     # Ajouter le répertoire de base au sys.path pour permettre l'import des macros
     if base_dir not in sys.path:
         sys.path.insert(0, base_dir)
+
+    # Vérifier les mises à jour (uniquement depuis l'exe compilé)
+    prompt_update()
 
     # Créer le dossier macros s'il n'existe pas
     macros_dir = get_macros_dir()

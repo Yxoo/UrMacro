@@ -1,6 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 # SPECPATH = dossier contenant ce fichier (tools/)
 import os
+import certifi
 
 block_cipher = None
 
@@ -8,7 +9,9 @@ a = Analysis(
     [os.path.join(SPECPATH, '..', 'main.py')],
     pathex=[os.path.join(SPECPATH, '..')],
     binaries=[],
-    datas=[],
+    datas=[
+        (certifi.where(), 'certifi'),
+    ],
     hiddenimports=[
         'pynput',
         'pynput.keyboard',
@@ -24,6 +27,7 @@ a = Analysis(
         'src.core',
         'src.ui',
         'requests',
+        'certifi',
     ],
     hookspath=[],
     hooksconfig={},
